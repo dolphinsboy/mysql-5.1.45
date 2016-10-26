@@ -1,0 +1,3 @@
+MYSQL_STORAGE_ENGINE(spartan,,  [Example Storage Engine],
+        [Example for Storage Engines for developers], [max,max-no-ndb])
+MYSQL_PLUGIN_DYNAMIC(spartan,   [ha_spartan.la])

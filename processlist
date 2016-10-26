@@ -1,0 +1,99 @@
+Id	User	Host	db	Command	Time	State	Info
+19844906	replica	10.30.21.130:48006	NULL	Binlog Dump GTID	7180737	Master has sent all binlog to slave; waiting for binlog to be updated	NULL
+46234621	replica	10.30.21.164:46536	NULL	Binlog Dump GTID	5382328	Master has sent all binlog to slave; waiting for binlog to be updated	NULL
+60264919	replica	10.30.21.131:55277	NULL	Binlog Dump GTID	4607482	Master has sent all binlog to slave; waiting for binlog to be updated	NULL
+65899272	replica	10.30.21.30:31374	NULL	Binlog Dump GTID	3982142	Master has sent all binlog to slave; waiting for binlog to be updated	NULL
+65899985	replica	10.30.21.206:33800	NULL	Binlog Dump GTID	3982092	Master has sent all binlog to slave; waiting for binlog to be updated	NULL
+87213088	superdba	10.30.6.49:34458	productgroup	Sleep	217		NULL
+87214599	productgroup	10.30.28.173:63358	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214611	productgroup	10.30.28.129:35362	productgroup	Query	306	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='2' where team_sign=1219759
+87214612	productgroup	10.30.28.173:63495	productgroup	Query	306	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='7' where team_sign=1219726
+87214622	productgroup	10.30.28.173:63548	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214641	productgroup	10.30.28.129:35740	productgroup	Query	307	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219784
+87214657	productgroup	10.30.28.173:63871	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214694	productgroup	10.30.28.173:64263	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214697	productgroup	10.30.28.129:36471	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214699	productgroup	10.30.28.129:36487	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214711	productgroup	10.30.28.173:64437	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214723	productgroup	10.30.28.173:64539	productgroup	Query	307	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219740
+87214752	productgroup	10.30.28.173:64862	productgroup	Query	307	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='2' where team_sign=1219759
+87214763	productgroup	10.30.28.129:37229	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214769	productgroup	10.30.28.129:37283	productgroup	Query	307	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='7' where team_sign=1219726
+87214777	productgroup	10.30.28.129:37386	productgroup	Query	307	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219784
+87214785	productgroup	10.30.28.129:37469	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87214867	productgroup	10.30.28.173:20646	productgroup	Query	306	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219740
+87214911	productgroup	10.30.28.129:38841	productgroup	Query	307	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='2' where team_sign=1219759
+87214938	productgroup	10.30.28.173:21366	productgroup	Query	308	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='7' where team_sign=1219726
+87214965	productgroup	10.30.28.129:39422	productgroup	Query	306	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219784
+87214973	productgroup	10.30.28.129:39501	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215059	productgroup	10.30.28.173:22534	productgroup	Query	307	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219740
+87215072	productgroup	10.30.28.129:40643	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215074	productgroup	10.30.28.129:40655	productgroup	Query	305	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='2' where team_sign=1219611
+87215103	productgroup	10.30.28.129:41081	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215108	productgroup	10.30.28.129:41116	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215131	productgroup	10.30.28.129:41374	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215143	productgroup	10.30.28.173:23174	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215150	productgroup	10.30.28.173:23261	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215172	productgroup	10.30.28.129:41777	productgroup	Query	305	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='8' where team_sign=1219726
+87215182	productgroup	10.30.28.173:23667	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215189	productgroup	10.30.28.173:23714	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215192	productgroup	10.30.28.129:41923	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215234	productgroup	10.30.28.129:42443	productgroup	Query	306	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='2' where team_sign=1219759
+87215235	productgroup	10.30.28.129:42453	productgroup	Query	307	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='2' where team_sign=1219611
+87215238	productgroup	10.30.28.129:42487	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215253	productgroup	10.30.28.173:24540	productgroup	Query	306	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='7' where team_sign=1219726
+87215261	productgroup	10.30.28.129:42688	productgroup	Query	329	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215285	productgroup	10.30.28.173:25127	productgroup	Query	304	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219784
+87215289	productgroup	10.30.28.173:25199	productgroup	Query	302	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219770
+87215303	productgroup	10.30.28.129:43363	productgroup	Query	300	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='8' where team_sign=1219726
+87215371	productgroup	10.30.28.173:26150	productgroup	Query	280	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219740
+87215392	productgroup	10.30.28.129:44120	productgroup	Query	317	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215433	productgroup	10.30.28.173:26638	productgroup	Query	268	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='2' where team_sign=1219611
+87215469	productgroup	10.30.28.129:44994	productgroup	Query	256	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219770
+87215504	productgroup	10.30.28.129:45349	productgroup	Query	307	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215529	productgroup	10.30.28.173:27208	productgroup	Query	237	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='8' where team_sign=1219726
+87215766	productgroup	10.30.28.173:29185	productgroup	Query	164	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219770
+87215797	productgroup	10.30.28.129:47804	productgroup	Query	285	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215890	productgroup	10.30.28.129:48995	productgroup	Query	132	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='2' where team_sign=1219611
+87215902	productgroup	10.30.28.173:29988	productgroup	Query	276	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215969	productgroup	10.30.28.129:49792	productgroup	Query	269	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87215990	productgroup	10.30.28.129:49919	productgroup	Query	105	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='8' where team_sign=1219726
+87216048	productgroup	10.30.28.129:50394	productgroup	Query	266	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87216052	productgroup	10.30.28.129:50415	productgroup	Query	265	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87216130	productgroup	10.30.28.129:50936	productgroup	Query	259	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87216186	productgroup	10.30.28.173:31924	productgroup	Query	256	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87216278	productgroup	10.30.28.173:32525	productgroup	Query	67	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219770
+87216288	productgroup	10.30.28.173:32591	productgroup	Query	240	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87216321	productgroup	10.30.28.173:32893	productgroup	Query	51	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219855
+87216326	productgroup	10.30.28.173:32918	productgroup	Query	55	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219817
+87216340	productgroup	10.30.28.129:52495	productgroup	Query	56	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219854
+87216341	productgroup	10.30.28.173:33003	productgroup	Query	61	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='9' where team_sign=1219726
+87216349	productgroup	10.30.28.173:33073	productgroup	Query	55	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219867
+87216374	productgroup	10.30.28.173:33197	productgroup	Query	41	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219871
+87216585	productgroup	10.30.28.129:54109	productgroup	Query	38	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219873
+87216588	productgroup	10.30.28.173:34507	productgroup	Query	34	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219872
+87216595	productgroup	10.30.28.173:34548	productgroup	Query	39	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219875
+87216610	productgroup	10.30.28.129:54341	productgroup	Query	225	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87216633	productgroup	10.30.28.173:34823	productgroup	Query	29	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219876
+87216684	productgroup	10.30.28.173:35156	productgroup	Query	26	Searching rows for update	update `productgroup`.`hhs_order_info` set teammen_num='1' where team_sign=1219870
+87216781	productgroup	10.30.28.129:55469	productgroup	Query	212	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87216803	dba	10.30.6.49:55061	NULL	Sleep	169		NULL
+87216878	superdba	10.30.6.49:61218	NULL	Sleep	0		NULL
+87217006	productgroup	10.30.28.129:56730	productgroup	Query	19	Sending data	select count(*) from `productgroup`.`hhs_order_info` where team_sign=1219877 and team_status>0
+87217176	productgroup	10.30.28.129:58046	productgroup	Query	18	Sending data	select count(*) from `productgroup`.`hhs_order_info` where team_sign=1219877 and team_status>0
+87217213	productgroup	10.30.28.129:58357	productgroup	Query	18	Sending data	select count(*) from `productgroup`.`hhs_order_info` where team_sign=1219726 and team_status>0
+87217254	productgroup	10.30.28.173:39292	productgroup	Query	18	Sending data	select count(*) from `productgroup`.`hhs_order_info` where team_sign=1219726 and team_status>0
+87217333	productgroup	10.30.28.129:59809	productgroup	Query	18	Sending data	select count(*) from `productgroup`.`hhs_order_info` where team_sign=1219877 and team_status>0
+87217367	productgroup	10.30.28.129:60375	productgroup	Query	16	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87217376	productgroup	10.30.28.129:60546	productgroup	Query	19	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=1216253 and team_first=1
+87217380	productgroup	10.30.28.129:60577	productgroup	Query	19	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=1219695 and team_first=1
+87217382	productgroup	10.30.28.129:60591	productgroup	Query	19	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=1079798 and team_first=1
+87217391	productgroup	10.30.28.129:60719	productgroup	Query	19	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=1219637 and team_first=1
+87217401	productgroup	10.30.28.129:60815	productgroup	Query	19	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=1219201 and team_first=1
+87217406	productgroup	10.30.28.129:60875	productgroup	Query	19	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=1219779 and team_first=1
+87217416	productgroup	10.30.28.129:60973	productgroup	Query	16	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87217422	productgroup	10.30.28.129:61097	productgroup	Query	19	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=1219779 and team_first=1
+87217428	productgroup	10.30.28.129:61246	productgroup	Query	19	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=1205580 and team_first=1
+87217454	productgroup	10.30.28.129:61603	productgroup	Query	18	Sending data	SELECT * FROM `productgroup`.`hhs_order_info` where team_sign=987019 and team_first=1
+87217473	productgroup	10.30.28.129:61874	productgroup	Query	17	Searching rows for update	UPDATE `productgroup`.`hhs_order_info` SET team_status=3,order_status=2 WHERE team_status=1 and team
+87217475	superdba	10.30.6.49:62288	NULL	Query	0	init	show processlist

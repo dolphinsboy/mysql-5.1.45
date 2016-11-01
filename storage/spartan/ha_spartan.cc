@@ -312,8 +312,13 @@ int ha_spartan::open(const char *name, int mode, uint test_if_locked)
 {
   DBUG_ENTER("ha_spartan::open");
 
+  /*BEGIN GUOSONG MODIFICATION*/
+  char name_buff[FN_REFLEN];
   if (!(share = get_share(name, table)))
     DBUG_RETURN(1);
+  share->data_class->open_table(fn_format(name_buff, name, "", SDE_EXT,
+              MY_REPLACE_EXT|MY_UNPACK_FILENAME));
+  /*END GUOSONG MODIFICATION*/
   thr_lock_data_init(&share->lock,&lock,NULL);
 
   DBUG_RETURN(0);
@@ -789,6 +794,19 @@ int ha_spartan::delete_table(const char *name)
 {
   DBUG_ENTER("ha_spartan::delete_table");
   /* This is not implemented but we want someone to be able that it works. */
+
+  /*BEGIN GUOSONG MODIFICATION*/
+  char name_buff[FN_REFLEN];
+
+  if(!(share=get_share(name, table)))
+        DBUG_RETURN(1);
+
+  pthread_mutex_lock(&spartan_mutex);
+  share->data_class->close_table();
+  my_delete(fn_format(name_buff, name, "",
+          SDE_EXT,MY_REPLACE_EXT|MY_UNPACK_FILENAME), MYF(0));
+  pthread_mutex_unlock(&spartan_mutex);
+  /*END GUOSONG MODIFICATION*/
   DBUG_RETURN(0);
 }
 
@@ -810,7 +828,24 @@ int ha_spartan::delete_table(const char *name)
 int ha_spartan::rename_table(const char * from, const char * to)
 {
   DBUG_ENTER("ha_spartan::rename_table ");
-  DBUG_RETURN(HA_ERR_WRONG_COMMAND);
+  /*BEGIN GUOSONG MODIFICATION*/
+  char data_from[FN_REFLEN];
+  char data_to[FN_REFLEN];
+
+  if(!(share=get_share(from,table)))
+        DBUG_RETURN(1);
+
+  pthread_mutex_lock(&spartan_mutex);
+  share->data_class->close_table();
+  my_copy(fn_format(data_from, from, "", 
+          SDE_EXT,MY_REPLACE_EXT|MY_UNPACK_FILENAME),
+          fn_format(data_to, to,"",SDE_EXT,MY_REPLACE_EXT|MY_UNPACK_FILENAME),
+          MYF(0));
+  share->data_class->open_table(data_to);
+  pthread_mutex_unlock(&spartan_mutex);
+  my_delete(data_from, MYF(0));
+  DBUG_RETURN(0);
+  /*END GUOSONG MODIFICATION*/
 }
 
 

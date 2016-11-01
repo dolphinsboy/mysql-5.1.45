@@ -1,6 +1,6 @@
 ### 一. 构建新的存储引擎
 
-新的存储引擎名称为spartan
+#### 1. 新的存储引擎名称为spartan
 
 ```sql
 cd storage 
@@ -24,6 +24,129 @@ INSTALL PLUGIN spartan SONAME 'ha_spartan.so';
 
 ```
 
+#### 2.增加数据操作
+
+编辑ha_spartan.h文件,添加如下内容:
+
+```c
+#include "spartan_data.h"
+```
+
+修改Makefile.am文件,添加如下内容:
+
+```c
+noinst_HEADERS =    ha_spartan.h spartan_data.h 
+libspartan_a_SOURCES=   ha_spartan.cc spartan_data.cc
+
+```
+
+修改Makefile.in,添加如下内容:
+
+```c
+#BEGIN GUOSONG MODIFICATION
+noinst_HEADERS = ha_spartan.h spartan_data.h
+#END GUOSONG MODIFICATION
+
+#BEGIN GUOSONG MODIFICATION
+libspartan_a_SOURCES = ha_spartan.cc spartan_data.cc
+#END GUOSONG MODIFICATION 
+
+#BEGIN GUOSONG MODIFICATION
+am_libspartan_a_OBJECTS = libspartan_a-ha_spartan.$(OBJEXT) spartan_data.$(OBJEXT)
+#END GUOSONG MODIFICATION
+
+```
+
+修改configure文件,添加如下内容:
+
+```c
+待补充
+```
+
+#### 3.将spatan存储引起添加到服务器
+
+修改my_config.h,添加如下内容:
+ 
+```c
+/*BEGIN GUOSONG MODIFICATION*/
+#define WITH_SPARTAN_STORAGE_ENGINE 1
+/*END GUOSONG MODIFICATION*/
+
+```
+
+修改handler.h,添加如下内容:
+
+```c
+enum legacy_db_type
+{
+    ...
+  DB_TYPE_SPARTAN_DB,
+  DB_TYPE_FIRST_DYNAMIC=42,
+  DB_TYPE_DEFAULT=127 // Must be last
+    ...
+}
+```
+
+
+#### 4.处理表操作
+
+修改ha_spartan.h文件
+
+```c
+/** @brief
+  SPARTAN_SHARE is a structure that will be shared among all open handlers.
+  This spartan implements the minimum of what you will probably need.
+*/
+typedef struct st_spartan_share {
+  char *table_name;
+  uint table_name_length,use_count;
+  pthread_mutex_t mutex;
+  THR_LOCK lock;
+  /*BEGIN GUOSONG MODIFICATION*/
+  Spartan_data *data_class;
+  /*END GUOSONG MODIFICATION*/
+
+} SPARTAN_SHARE;
+```
+
+修改ha_spartan.cc的get_share方法:
+
+```c
+    /*BEGIN GUOSONG MODIFICATION*/
+    /*Reason this Modification:
+    ¦* create an instance of data class
+    ¦*/
+    share->data_class = new Spartan_data();
+    /*END GUOSONG MODIFICATION*/ 
+```
+
+修改ha_spartan.cc文件里的free_share方法:
+
+```c
+    /*BEGIN GUOSONG MODIFICATION*/
+    if(share->data_class != NULL)
+    ¦   delete share->data_class;
+    share->data_class = NULL;
+    /*END GUOSONG MODIFICATION*/
+```
+
+设置数据文件和索引文件的后缀名称:
+
+```c
+/*BEGIN GUOSONG MODIFICATION*/
+static const char *ha_spartan_exts[] = {
+  SDE_EXT,
+  SDI_EXT,
+  NullS
+};
+/*END GUOSONG MODIFICATION*/
+```
+
+修改create操作:
+
+```c
+
+```
 
 make的时候遇到错误，修改Makefile，按照如下注释：
 

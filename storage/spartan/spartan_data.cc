@@ -63,7 +63,7 @@ int Spartan_data::read_header()
     if(number_records == -1)
     {
         /*数据文件还没有创建*/
-        my_seek(data_file, 0l, MY_SEEK, MYF(0));
+        my_seek(data_file, 0l, MY_SEEK_SET, MYF(0));
         /*尝试读取数据文件的crashed标志*/
         i = my_read(data_file, (uchar*)&crashed, sizeof(bool), MYF(0));
         /*尝试读取记录的行数*/
@@ -80,7 +80,7 @@ int Spartan_data::read_header()
     DBUG_RETURN(0);
 }
 
-long long Spartan_data::write_header(uchar *buf, int length)
+int Spartan_data::write_header()
 {
     int i;
     DBUG_ENTER("Spartan_data::write_row");
@@ -145,14 +145,14 @@ long long Spartan_data::update_row(uchar *old_rec, uchar *new_rec,
     /*如果position=-1, 逐行查找到对应的行*/
     if(position == -1)
     {
-        cmp_rec = (uchar*)my_malloc(length,MYF(MY_ZEROFILL|MY_WME);
+        cmp_rec = (uchar*)my_malloc(length,MYF(MY_ZEROFILL|MY_WME));
         pos = 0;
         cur_pos = my_seek(data_file, header_size, MY_SEEK_SET, MYF(0));
 
         while((cur_pos != -1) && (pos != -1))
         {
             /*读取行对应的内容*/
-            pos = read_row(cmp_rec, length,cur_pos));
+            pos = read_row(cmp_rec, length,cur_pos);
             /*与记录的前镜像进行比较*/
             if(memcmp(old_rec, cmp_rec, length) == 0)
             {   
@@ -166,7 +166,7 @@ long long Spartan_data::update_row(uchar *old_rec, uchar *new_rec,
             }
         }
 
-        my_free(cmp_rec);
+        my_free(cmp_rec,MYF(0));
     }
 
     if(pos != -1)
@@ -204,7 +204,7 @@ int Spartan_data::delete_row(uchar *old_rec, int length,
         position = header_size;
     pos = position;
 
-    if (poistion == -1)
+    if (position == -1)
     {
         cmp_rec = (uchar*)my_malloc(length, MYF(MY_ZEROFILL | MY_WME));
         pos = 0;
@@ -212,8 +212,8 @@ int Spartan_data::delete_row(uchar *old_rec, int length,
 
         while((cur_pos != -1) && (pos != -1))
         {
-            pos = read_row(cmp_rec, length, cur_pos));
-            if(memcp(old_rec, cmp_rec, length) == 0)
+            pos = read_row(cmp_rec, length, cur_pos);
+            if(memcmp(old_rec, cmp_rec, length) == 0)
             {
                 number_records--;
                 number_del_records++;
@@ -225,7 +225,7 @@ int Spartan_data::delete_row(uchar *old_rec, int length,
 
         }
 
-        my_free(cmp_rec);
+        my_free(cmp_rec,MYF(0));
     }
 
     if(pos != -1)
@@ -260,7 +260,7 @@ int Spartan_data::read_row(uchar *buf, int length, long long position)
         {
             /*0是没有被删除,1是被删除*/
             /*读取记录的长度*/
-            i = my_read(data_file, &rec_len,sizeof(int), MYF(0));
+            i = my_read(data_file, (uchar*)&rec_len,sizeof(int), MYF(0));
             i = my_read(data_file, buf, 
                     (length<rec_len) ? length : rec_len, MYF(0));
         }else if(i==0){
@@ -291,7 +291,7 @@ int Spartan_data::records()
     DBUG_RETURN(0);
 }
 
-int Spartan_data:del_records()
+int Spartan_data::del_records()
 {
     DBUG_ENTER("Spartan_data::del_records");
     DBUG_RETURN(0);

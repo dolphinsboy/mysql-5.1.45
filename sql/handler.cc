@@ -57,7 +57,8 @@ static const LEX_STRING sys_table_aliases[]=
   { C_STRING_WITH_LEN("INNOBASE") },  { C_STRING_WITH_LEN("INNODB") },
   { C_STRING_WITH_LEN("NDB") },       { C_STRING_WITH_LEN("NDBCLUSTER") },
   { C_STRING_WITH_LEN("HEAP") },      { C_STRING_WITH_LEN("MEMORY") },
-  { C_STRING_WITH_LEN("MERGE") },     { C_STRING_WITH_LEN("MRG_MYISAM") },
+  { C_STRING_WITH_LEN("MERGE") },     { C_STRING_WITH_LEN("MRG_MYISAM")},
+  { C_STRING_WITH_LEN("SPARTAN")},
   {NullS, 0}
 };
 

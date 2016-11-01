@@ -96,6 +96,11 @@
 #include "ha_spartan.h"
 #include <mysql/plugin.h>
 
+/*BEGIN GUOSONG MODIFICATION*/
+#define SDE_EXT ".sde"
+#define SDI_EXT ".sdi"
+/*END GUOSONG MODIFICATION*/
+
 static handler *spartan_create_handler(handlerton *hton,
                                        TABLE_SHARE *table, 
                                        MEM_ROOT *mem_root);
@@ -195,6 +200,13 @@ static SPARTAN_SHARE *get_share(const char *table_name, TABLE *table)
     if (my_hash_insert(&spartan_open_tables, (uchar*) share))
       goto error;
     thr_lock_init(&share->lock);
+
+    /*BEGIN GUOSONG MODIFICATION*/
+    /*Reason this Modification:
+     * create an instance of data class
+     */
+    share->data_class = new Spartan_data();
+    /*END GUOSONG MODIFICATION*/
     pthread_mutex_init(&share->mutex,MY_MUTEX_INIT_FAST);
   }
   share->use_count++;
@@ -221,6 +233,11 @@ static int free_share(SPARTAN_SHARE *share)
   pthread_mutex_lock(&spartan_mutex);
   if (!--share->use_count)
   {
+    /*BEGIN GUOSONG MODIFICATION*/
+    if(share->data_class != NULL)
+        delete share->data_class;
+    share->data_class = NULL;
+    /*END GUOSONG MODIFICATION*/
     hash_delete(&spartan_open_tables, (uchar*) share);
     thr_lock_delete(&share->lock);
     pthread_mutex_destroy(&share->mutex);
@@ -261,9 +278,13 @@ ha_spartan::ha_spartan(handlerton *hton, TABLE_SHARE *table_arg)
   delete_table method in handler.cc
 */
 
+/*BEGIN GUOSONG MODIFICATION*/
 static const char *ha_spartan_exts[] = {
+  SDE_EXT,
+  SDI_EXT,
   NullS
 };
+/*END GUOSONG MODIFICATION*/
 
 const char **ha_spartan::bas_ext() const
 {
@@ -841,6 +862,17 @@ int ha_spartan::create(const char *name, TABLE *table_arg,
     This is not implemented but we want someone to be able to see that it
     works.
   */
+  /*BEGIN GUOSONG MODIFICATION*/
+  char name_buff[FN_REFLEN];
+
+  if(!(share = get_share(name, table)))
+      DBUG_RETURN(1);
+
+  if(share->data_class->create_table(fn_format(name_buff, name, "",SDE_EXT,
+                  MY_REPLACE_EXT|MY_UNPACK_FILENAME)))
+        DBUG_RETURN(-1);
+  share->data_class->close_table();
+  /*END GUOSONG MODIFICATION*/
   DBUG_RETURN(0);
 }
 
@@ -896,7 +928,7 @@ mysql_declare_plugin(spartan)
   &spartan_storage_engine,
   "SPARTAN",
   "Brian Aker, MySQL AB",
-  "Example storage engine",
+  "Spartan storage engine",
   PLUGIN_LICENSE_GPL,
   spartan_init_func,                            /* Plugin Init */
   spartan_done_func,                            /* Plugin Deinit */

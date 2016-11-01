@@ -31,6 +31,11 @@
   /sql/handler.h and /storage/spartan/ha_spartan.cc
 */
 
+
+/*BEGIN GUOSONG MODIFICATION*/
+#include "spartan_data.h"
+/*END GUOSONG MODIFICATION*/
+
 #ifdef USE_PRAGMA_INTERFACE
 #pragma interface			/* gcc class implementation */
 #endif
@@ -44,6 +49,10 @@ typedef struct st_spartan_share {
   uint table_name_length,use_count;
   pthread_mutex_t mutex;
   THR_LOCK lock;
+  /*BEGIN GUOSONG MODIFICATION*/
+  Spartan_data *data_class;
+  /*END GUOSONG MODIFICATION*/
+
 } SPARTAN_SHARE;
 
 /** @brief

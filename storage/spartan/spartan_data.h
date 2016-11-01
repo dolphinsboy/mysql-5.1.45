@@ -10,7 +10,7 @@ public:
     int create_table(char *path);
     int open_table(char *path);
     long long write_row(uchar *buf, int length);
-    long long update_row(uchar *buf, int uchar *new_rec,
+    long long update_row(uchar *buf, uchar *new_rec,
             int length, long long position);
     int read_row(uchar *buf, int length, long long position);
     int delete_row(uchar *old_rec, int length, long long position);
@@ -29,4 +29,4 @@ private:
     int number_del_records;
     int read_header();
     int write_header();
-}
+};

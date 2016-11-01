@@ -238,8 +238,88 @@ int Spartan_data::delete_row(uchar *old_rec, int length,
     DBUG_RETURN(i);
 }
 
+int Spartan_data::read_row(uchar *buf, int length, long long position)
+{
+    int i;
+    int rec_len;
+    long long pos;
+    uchar deleted=2;
 
+    DBUG_ENTER("Spartan_data::read_row");
 
+    if(position <= 0)
+        /*跳过文件头部*/
+        position = header_size;
+    pos = my_seek(data_file, position, MY_SEEK_SET, MYF(0));
 
+    if(pos != -1)
+    {
+        i = my_read(data_file, &deleted,sizeof(uchar), MYF(0));
+        
+        if(deleted == 0)
+        {
+            /*0是没有被删除,1是被删除*/
+            /*读取记录的长度*/
+            i = my_read(data_file, &rec_len,sizeof(int), MYF(0));
+            i = my_read(data_file, buf, 
+                    (length<rec_len) ? length : rec_len, MYF(0));
+        }else if(i==0){
+            /*读取失败*/
+            DBUG_RETURN(-1);
+        }else
+            /*记录被删除行的数据*/
+            DBUG_RETURN(read_row(buf,length, cur_position()+length+(record_header_size-sizeof(uchar))));
+    }else
+        DBUG_RETURN(-1);
+    DBUG_RETURN(0);
+}
 
+int Spartan_data::close_table()
+{
+    DBUG_ENTER("Spartan_data::close_table");
+    if(data_file != -1)
+    {
+        my_close(data_file, MYF(0));
+        data_file = -1;
+    }
+    DBUG_RETURN(0);
+}
 
+int Spartan_data::records()
+{
+    DBUG_ENTER("Spartan_data::records");
+    DBUG_RETURN(0);
+}
+
+int Spartan_data:del_records()
+{
+    DBUG_ENTER("Spartan_data::del_records");
+    DBUG_RETURN(0);
+}
+
+long long Spartan_data::cur_position()
+{
+    long long pos;
+    DBUG_ENTER("Spartan_data::cur_position");
+    pos = my_seek(data_file, 0L, MY_SEEK_CUR, MYF(0));
+    if(pos == 0)
+        DBUG_RETURN(header_size);
+    DBUG_RETURN(pos);
+}
+
+int Spartan_data::trunc_table()
+{
+    DBUG_ENTER("Spartan_data::trunc_table");
+    if(data_file != -1)
+    {
+        my_chsize(data_file, 0, 0, MYF(MY_WME));
+        write_header();
+    }
+    DBUG_RETURN(0);
+}
+
+int Spartan_data::row_size(int length)
+{
+    DBUG_ENTER("Spartan_data::row_size");
+    DBUG_RETURN(length + record_header_size);
+}

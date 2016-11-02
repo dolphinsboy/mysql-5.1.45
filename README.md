@@ -57,10 +57,38 @@ am_libspartan_a_OBJECTS = libspartan_a-ha_spartan.$(OBJEXT) spartan_data.$(OBJEX
 
 ```
 
+修改CMakeLists.txt:
+
+```c
+SET(SPARTAN_SOURCES ha_spartan.cc spartan_data.cc)
+```
+
 修改configure文件,添加如下内容:
 
 ```c
 待补充
+```
+
+目前通过INSTALL PLUGIN方式,这种方式的结果如下:
+
+```sql
+
+mysql> show plugins;
++------------+--------+----------------+---------------+---------+
+| Name       | Status | Type           | Library       | License |
++------------+--------+----------------+---------------+---------+
+| binlog     | ACTIVE | STORAGE ENGINE | NULL          | GPL     |
+| ARCHIVE    | ACTIVE | STORAGE ENGINE | NULL          | GPL     |
+| BLACKHOLE  | ACTIVE | STORAGE ENGINE | NULL          | GPL     |
+| CSV        | ACTIVE | STORAGE ENGINE | NULL          | GPL     |
+| MEMORY     | ACTIVE | STORAGE ENGINE | NULL          | GPL     |
+| InnoDB     | ACTIVE | STORAGE ENGINE | NULL          | GPL     |
+| MyISAM     | ACTIVE | STORAGE ENGINE | NULL          | GPL     |
+| MRG_MYISAM | ACTIVE | STORAGE ENGINE | NULL          | GPL     |
+| EXAMPLE    | ACTIVE | STORAGE ENGINE | ha_example.so | GPL     |
+| SPARTAN    | ACTIVE | STORAGE ENGINE | ha_spartan.so | GPL     |
++------------+--------+----------------+---------------+---------+
+10 rows in set (0.00 sec)
 ```
 
 #### 3.将spatan存储引起添加到服务器
@@ -142,10 +170,81 @@ static const char *ha_spartan_exts[] = {
 /*END GUOSONG MODIFICATION*/
 ```
 
-修改create操作:
+修改ha_spartan.cc中的create操作:
 
 ```c
+  /*BEGIN GUOSONG MODIFICATION*/
+  char name_buff[FN_REFLEN];
 
+  if(!(share = get_share(name, table)))
+      DBUG_RETURN(1);
+
+  if(share->data_class->create_table(fn_format(name_buff, name, "",SDE_EXT,
+                  MY_REPLACE_EXT|MY_UNPACK_FILENAME)))
+        DBUG_RETURN(-1);
+  share->data_class->close_table();
+  /*END GUOSONG MODIFICATION*/
+
+```
+
+修改ha_spartan.cc中的delete_table操作:
+
+```c
+  /*BEGIN GUOSONG MODIFICATION*/
+  char name_buff[FN_REFLEN];
+  
+  if(!(share=get_share(name, table)))
+    ¦   DBUG_RETURN(1);
+  
+  pthread_mutex_lock(&spartan_mutex);
+  share->data_class->close_table();
+  my_delete(fn_format(name_buff, name, "",
+    ¦   ¦ SDE_EXT,MY_REPLACE_EXT|MY_UNPACK_FILENAME), MYF(0));
+  pthread_mutex_unlock(&spartan_mutex);
+  /*END GUOSONG MODIFICATION*/
+```
+
+修改ha_spartan.cc中的rename_table操作:
+
+```c
+  /*BEGIN GUOSONG MODIFICATION*/
+  char data_from[FN_REFLEN];
+  char data_to[FN_REFLEN];
+  
+  if(!(share=get_share(from,table)))
+    ¦   DBUG_RETURN(1);
+  
+  pthread_mutex_lock(&spartan_mutex);
+  share->data_class->close_table();
+  my_copy(fn_format(data_from, from, "",
+    ¦   ¦ SDE_EXT,MY_REPLACE_EXT|MY_UNPACK_FILENAME),
+    ¦   ¦ fn_format(data_to, to,"",SDE_EXT,MY_REPLACE_EXT|MY_UNPACK_FILENAME),
+    ¦   ¦ MYF(0));
+  share->data_class->open_table(data_to);
+  pthread_mutex_unlock(&spartan_mutex);
+  my_delete(data_from, MYF(0));
+  DBUG_RETURN(0);
+  /*END GUOSONG MODIFICATION*/
+```
+
+修改ha_spartan.cc中的open操作:
+
+```c
+int ha_spartan::open(const char *name, int mode, uint test_if_locked) 
+{
+  DBUG_ENTER("ha_spartan::open");
+
+  /*BEGIN GUOSONG MODIFICATION*/ 
+  char name_buff[FN_REFLEN];
+  if (!(share = get_share(name, table)))
+    DBUG_RETURN(1);
+  share->data_class->open_table(fn_format(name_buff, name, "", SDE_EXT,
+    ¦   ¦   ¦ MY_REPLACE_EXT|MY_UNPACK_FILENAME));
+  /*END GUOSONG MODIFICATION*/
+  thr_lock_data_init(&share->lock,&lock,NULL);
+
+  DBUG_RETURN(0);             
+}
 ```
 
 make的时候遇到错误，修改Makefile，按照如下注释：

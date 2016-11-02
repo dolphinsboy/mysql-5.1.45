@@ -10,10 +10,10 @@ public:
     int create_table(char *path);
     int open_table(char *path);
     long long write_row(uchar *buf, int length);
-    long long update_row(uchar *buf, uchar *new_rec,
+    long long update_row(const uchar *buf, uchar *new_rec,
             int length, long long position);
     int read_row(uchar *buf, int length, long long position);
-    int delete_row(uchar *old_rec, int length, long long position);
+    int delete_row(const uchar *old_rec, int length, long long position);
     int close_table();
     long long cur_position();
     int records();

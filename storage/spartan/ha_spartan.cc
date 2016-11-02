@@ -381,7 +381,13 @@ int ha_spartan::close(void)
 int ha_spartan::write_row(uchar *buf)
 {
   DBUG_ENTER("ha_spartan::write_row");
-  DBUG_RETURN(HA_ERR_WRONG_COMMAND);
+  /*BEGIN GUOSONG MODIFICATION*/
+  ha_statistic_increment(&SSV::ha_write_count);
+  pthread_mutex_lock(&spartan_mutex);
+  share->data_class->write_row(buf, table->s->rec_buff_length);
+  pthread_mutex_unlock(&spartan_mutex);
+  DBUG_RETURN(0);
+  /*END GUOSONG MODIFICATION*/
 }
 
 
@@ -411,7 +417,16 @@ int ha_spartan::update_row(const uchar *old_data, uchar *new_data)
 {
 
   DBUG_ENTER("ha_spartan::update_row");
-  DBUG_RETURN(HA_ERR_WRONG_COMMAND);
+  
+  /*BEGIN GUOSONG MODIFICATION*/
+  pthread_mutex_lock(&spartan_mutex);
+  share->data_class->update_row(
+          old_data, new_data,
+          table->s->rec_buff_length,
+          current_position-share->data_class->row_size(table->s->rec_buff_length));
+  pthread_mutex_unlock(&spartan_mutex);
+  DBUG_RETURN(0);
+  /*END GUOSONG MODIFICATION*/
 }
 
 
@@ -438,7 +453,19 @@ int ha_spartan::update_row(const uchar *old_data, uchar *new_data)
 int ha_spartan::delete_row(const uchar *buf)
 {
   DBUG_ENTER("ha_spartan::delete_row");
-  DBUG_RETURN(HA_ERR_WRONG_COMMAND);
+  /*BEGIN GUOSONG MODIFICATION*/
+  long long pos;
+
+  pthread_mutex_lock(&spartan_mutex);
+  if(current_position > 0)
+      pos = current_position - share->data_class->row_size(table->s->rec_buff_length);
+  else
+      pos = 0;
+
+  share->data_class->delete_row(buf, int(table->s->rec_buff_length), pos);
+  pthread_mutex_unlock(&spartan_mutex);
+  DBUG_RETURN(0);
+  /*END GUOSONG MODIFICATION*/
 }
 
 
@@ -533,7 +560,13 @@ int ha_spartan::index_last(uchar *buf)
 int ha_spartan::rnd_init(bool scan)
 {
   DBUG_ENTER("ha_spartan::rnd_init");
-  DBUG_RETURN(HA_ERR_WRONG_COMMAND);
+
+  /*BEGIN GUOSONG MODIFICATION*/
+  current_position = 0;
+  stats.records = 0;
+  ref_length = sizeof(long long);
+  DBUG_RETURN(0);
+  /*END GUOSONG MODIFICATION*/
 }
 
 int ha_spartan::rnd_end()
@@ -559,8 +592,20 @@ int ha_spartan::rnd_end()
 */
 int ha_spartan::rnd_next(uchar *buf)
 {
+  int rc;
   DBUG_ENTER("ha_spartan::rnd_next");
-  DBUG_RETURN(HA_ERR_END_OF_FILE);
+  /*BEGIN GUOSONG MODIFICATION*/
+  ha_statistic_increment(&SSV::ha_read_rnd_next_count);
+  rc = share->data_class->read_row(buf, table->s->rec_buff_length,
+          current_position);
+
+  if(rc != -1)
+      current_position = (off_t)share->data_class->cur_position();
+  else
+      DBUG_RETURN(HA_ERR_END_OF_FILE);
+  stats.records++;
+  DBUG_RETURN(0);
+  /*END GUOSONG MODIFICATION*/
 }
 
 
@@ -588,6 +633,9 @@ int ha_spartan::rnd_next(uchar *buf)
 void ha_spartan::position(const uchar *record)
 {
   DBUG_ENTER("ha_spartan::position");
+  /*BEGIN GUOSONG MODIFICATION*/
+  my_store_ptr(ref, ref_length, current_position);
+  /*END GUOSONG MODIFICATION*/
   DBUG_VOID_RETURN;
 }
 
@@ -608,7 +656,12 @@ void ha_spartan::position(const uchar *record)
 int ha_spartan::rnd_pos(uchar *buf, uchar *pos)
 {
   DBUG_ENTER("ha_spartan::rnd_pos");
-  DBUG_RETURN(HA_ERR_WRONG_COMMAND);
+  /*BEGIN GUOSONG MODIFICATION*/
+  ha_statistic_increment(&SSV::ha_read_rnd_next_count);
+  current_position = (off_t)my_get_ptr(pos, ref_length);
+  share->data_class->read_row(buf, current_position, -1);
+  DBUG_RETURN(0);
+  /*END GUOSONG MODIFICATION*/
 }
 
 
@@ -653,6 +706,10 @@ int ha_spartan::rnd_pos(uchar *buf, uchar *pos)
 int ha_spartan::info(uint flag)
 {
   DBUG_ENTER("ha_spartan::info");
+  /*BEGIN GUOSONG MODIFICATION*/
+  if (stats.records < 2)
+      stats.records = 2;
+  /*END GUOSONG MODIFICATION*/
   DBUG_RETURN(0);
 }
 
@@ -695,6 +752,11 @@ int ha_spartan::extra(enum ha_extra_function operation)
 int ha_spartan::delete_all_rows()
 {
   DBUG_ENTER("ha_spartan::delete_all_rows");
+  /*BEGIN GUOSONG MODIFICATION*/
+  pthread_mutex_lock(&spartan_mutex);
+  share->data_class->trunc_table();
+  pthread_mutex_unlock(&spartan_mutex);
+  /*END GUOSONG MODIFICATION*/
   DBUG_RETURN(HA_ERR_WRONG_COMMAND);
 }
 

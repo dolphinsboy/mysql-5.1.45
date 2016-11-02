@@ -63,6 +63,10 @@ class ha_spartan: public handler
   THR_LOCK_DATA lock;      ///< MySQL lock
   SPARTAN_SHARE *share;    ///< Shared lock info
 
+  /*BEGIN GUOSONG MODIFICATION*/
+  off_t current_position;
+  /*END GUOSONG MODIFICATION*/
+
 public:
   ha_spartan(handlerton *hton, TABLE_SHARE *table_arg);
   ~ha_spartan()

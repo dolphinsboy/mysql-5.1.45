@@ -122,10 +122,11 @@ long long Spartan_data::write_row(uchar *buf, int length)
         pos = i;
     else
         number_records++;
+        write_header();
     DBUG_RETURN(pos);
 }
 
-long long Spartan_data::update_row(uchar *old_rec, uchar *new_rec,
+long long Spartan_data::update_row(const uchar *old_rec, uchar *new_rec,
         int length, long long position)
 {
     long long pos;
@@ -187,7 +188,7 @@ long long Spartan_data::update_row(uchar *old_rec, uchar *new_rec,
 
 }
 
-int Spartan_data::delete_row(uchar *old_rec, int length, 
+int Spartan_data::delete_row(const uchar *old_rec, int length, 
         long long position)
 {
     /*流程和update_row差不多
@@ -235,6 +236,8 @@ int Spartan_data::delete_row(uchar *old_rec, int length,
         i = my_write(data_file,&deleted, sizeof(uchar),MYF(0));
         i = (i>1) ? 0 : i;
     }
+
+    write_header();
     DBUG_RETURN(i);
 }
 

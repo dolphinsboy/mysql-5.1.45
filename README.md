@@ -27,8 +27,7 @@ INSTALL PLUGIN spartan SONAME 'ha_spartan.so';
 **提示**
 
 >
-在修改Makefile.in以及Makefile.am之后需要运行一下sh BUILD/autorun.sh，生成新的Makefile.in
-
+在修改Makefile.in以及Makefile.am之后需要运行一下sh BUILD/autorun.sh，生成新的Makefile.in。
 例如在实际操作中先添加spartan_data，后再添加spartan_index，中间需要运行sh BUILD/autorun.sh，否则lib找不到对应的spartan_index相关函数。
 
 #### 2.增加数据操作

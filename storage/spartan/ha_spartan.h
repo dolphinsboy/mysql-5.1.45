@@ -34,6 +34,7 @@
 
 /*BEGIN GUOSONG MODIFICATION*/
 #include "spartan_data.h"
+#include "spartan_index.h"
 /*END GUOSONG MODIFICATION*/
 
 #ifdef USE_PRAGMA_INTERFACE
@@ -51,6 +52,7 @@ typedef struct st_spartan_share {
   THR_LOCK lock;
   /*BEGIN GUOSONG MODIFICATION*/
   Spartan_data *data_class;
+  Spartan_index *index_class;
   /*END GUOSONG MODIFICATION*/
 
 } SPARTAN_SHARE;

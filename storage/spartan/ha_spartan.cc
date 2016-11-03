@@ -206,6 +206,7 @@ static SPARTAN_SHARE *get_share(const char *table_name, TABLE *table)
      * create an instance of data class
      */
     share->data_class = new Spartan_data();
+    share->index_class = new Spartan_index();
     /*END GUOSONG MODIFICATION*/
     pthread_mutex_init(&share->mutex,MY_MUTEX_INIT_FAST);
   }

@@ -1,4 +1,4 @@
-#include "spartan_index.cc"
+#include "spartan_index.h"
 #include <my_dir.h>
 #include <string.h>
 
@@ -27,7 +27,7 @@ Spartan_index::Spartan_index()
     block_size = -1;
 }
 
-Spartan_index::create_index(char *path, int keylen)
+int Spartan_index::create_index(char *path, int keylen)
 {
     DBUG_ENTER("Spartan_index::create_index");
     DBUG_PRINT("info", ("path: %s", path));
@@ -53,6 +53,7 @@ int Spartan_index::open_index(char *path)
 
 int Spartan_index::read_header()
 {
+    int i;
     DBUG_ENTER("Spartan_index::read_header");
     if (block_size == -1)
     {
@@ -110,7 +111,7 @@ long long Spartan_index::write_row(SDE_INDEX *ndx)
     if (i == -1)
         pos = i;
 
-    DBUG_RETRUN(pos);
+    DBUG_RETURN(pos);
 }
 
 SDE_INDEX *Spartan_index::read_row(long long position)
@@ -127,7 +128,7 @@ SDE_INDEX *Spartan_index::read_row(long long position)
         ndx = new SDE_INDEX();
         /*与write_row对应,按照max_key_len进行读取*/
         i = my_read(index_file, ndx->key, max_key_len, MYF(0));
-        i = my_read(index_file, (uchar*)&n->pos, sizeof(long long), MYF(0));
+        i = my_read(index_file, (uchar*)&ndx->pos, sizeof(long long), MYF(0));
         /*i = my_read(index_file, (uchar*)&n->len, sizeof(int), MYF(0));*/
 
         if(i == -1)
@@ -151,7 +152,7 @@ int Spartan_index::insert_key(SDE_INDEX *ndx, bool allow_dupes)
     int i = -1;
     int icmp;
 
-    bool dup = false;
+    bool dupes = false;
     bool done = false;
 
     DBUG_ENTER("Spartan_index::insert_key");
@@ -179,11 +180,11 @@ int Spartan_index::insert_key(SDE_INDEX *ndx, bool allow_dupes)
         {
             n = p;
             p = p->next;
-        }else if(!allowd_dupes && (icmp == 0))
+        }else if(!allow_dupes && (icmp == 0))
         {
             /*已经存在*/
             p = NULL;
-            dupe = true;
+            dupes = true;
         }else
         {
             /*插在前面*/
@@ -192,7 +193,7 @@ int Spartan_index::insert_key(SDE_INDEX *ndx, bool allow_dupes)
         }
     }
 
-    if ((n != NULL) && !dupe)
+    if ((n != NULL) && !dupes)
     {
         if (p == NULL)
         {
@@ -237,7 +238,7 @@ int Spartan_index::delete_key(uchar *buf, long long pos, int key_len)
     while((p != NULL) && !done)
     {
         buf_len = p->key_ndx.length;
-        icmp = memcpm(buf, p->key_ndx.key,
+        icmp = memcmp(buf, p->key_ndx.key,
                 (buf_len > key_len) ? buf_len : key_len);
 
         if(icmp == 0)
@@ -263,7 +264,7 @@ int Spartan_index::delete_key(uchar *buf, long long pos, int key_len)
         if(p->next != NULL)
         {
             p->next->prev = p->prev;
-        }else(p->prev != NULL)
+        }else if(p->prev != NULL)
         {
             p->prev->next = p->next;
         }else
@@ -300,7 +301,7 @@ int Spartan_index::update_key(uchar *buf, long long pos, int key_len)
     DBUG_RETURN(0);
 }
 
-long long Spartan_index::get_index_pos(char *buf, int key_len)
+long long Spartan_index::get_index_pos(uchar *buf, int key_len)
 {
     long long pos = -1;
 
@@ -385,7 +386,7 @@ int Spartan_index::close_index()
     /*关闭索引文件*/
     if(index_file != -1)
     {
-        my_close(index_file);
+        my_close(index_file, MYF(0));
         index_file = -1;
     }
 
@@ -413,7 +414,7 @@ SDE_INDEX *Spartan_index::seek_index(uchar *key, int key_len)
     {
         while((n != NULL) && !done)
         {
-            buf_len = n.key_ndx.length;
+            buf_len = n->key_ndx.length;
             if(memcmp(key, n->key_ndx.key, 
                 (buf_len > key_len) ? buf_len : key_len))
                 done = true;
@@ -542,11 +543,11 @@ long long Spartan_index::get_first_pos()
     DBUG_RETURN(pos);
 }
 
-int Spartan_index::trun_index()
+int Spartan_index::trunc_index()
 {
     DBUG_ENTER("Spartan_index::trun_index");
 
-    if(index != -1)
+    if(index_file != -1)
     {
         my_chsize(index_file, 0L, 0, MYF(MY_WME));
         write_header();

@@ -22,9 +22,10 @@ public:
 
     int open_index(char *path);
     int create_index(char *path, int keylen);
+    int write_header();
     int insert_key(SDE_INDEX *ndx, bool allow_dupes);
-    int delete_key(SDE_INDEX *ndx, long long pos, int key_len);
-    int update_key(SDE_INDEX *ndx, long long pos, int key_len);
+    int delete_key(uchar *buf, long long pos, int key_len);
+    int update_key(uchar *buf, long long pos, int key_len);
     long long get_index_pos(uchar *buf, int key_len);
     long long get_first_pos();
     uchar *get_first_key();
@@ -51,4 +52,4 @@ private:
     long long write_row(SDE_INDEX *ndx);
     SDE_INDEX *read_row(long long position);
     long long curfpos();
-}
+};

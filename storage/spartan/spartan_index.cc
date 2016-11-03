@@ -1,4 +1,4 @@
-#include "spartan_index.cc"
+#include "spartan_index.h"
 #include <my_dir.h>
 #include <string.h>
 

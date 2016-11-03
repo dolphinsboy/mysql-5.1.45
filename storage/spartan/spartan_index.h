@@ -51,4 +51,4 @@ private:
     long long write_row(SDE_INDEX *ndx);
     SDE_INDEX *read_row(long long position);
     long long curfpos();
-}
+};

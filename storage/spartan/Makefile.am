@@ -30,7 +30,7 @@ LDADD =
 
 DEFS =                  @DEFS@
 #BEGIN GUOSONG MODIFICATION
-noinst_HEADERS =	ha_spartan.h spartan_data.h
+noinst_HEADERS =	ha_spartan.h spartan_data.h spartan_index.h
 #END GUOSONG MODIFICATION
 
 EXTRA_LTLIBRARIES =	ha_spartan.la
@@ -38,10 +38,7 @@ pkgplugin_LTLIBRARIES =	@plugin_spartan_shared_target@
 ha_spartan_la_LDFLAGS =	-module -rpath $(pkgplugindir)
 ha_spartan_la_CXXFLAGS=	$(AM_CFLAGS) -DMYSQL_DYNAMIC_PLUGIN
 ha_spartan_la_CFLAGS =	$(AM_CFLAGS) -DMYSQL_DYNAMIC_PLUGIN
-
-#BEGIN GUOSONG MODIFICATION
-ha_spartan_la_SOURCES =	ha_spartan.cc spartan_data.cc
-#END GUOSONG MODIFICATION
+ha_spartan_la_SOURCES =	ha_spartan.cc
 
 
 EXTRA_LIBRARIES =	libspartan.a
@@ -49,7 +46,7 @@ noinst_LIBRARIES =	@plugin_spartan_static_target@
 libspartan_a_CXXFLAGS =	$(AM_CFLAGS)
 libspartan_a_CFLAGS =	$(AM_CFLAGS)
 #BEGIN GUOSONG MODIFICATION
-libspartan_a_SOURCES=	ha_spartan.cc spartan_data.cc
+libspartan_a_SOURCES=	ha_spartan.cc spartan_data.cc spartan_index.cc
 #END GUOSONG MODIFICATION
 
 

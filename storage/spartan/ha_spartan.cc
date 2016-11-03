@@ -206,6 +206,7 @@ static SPARTAN_SHARE *get_share(const char *table_name, TABLE *table)
      * create an instance of data class
      */
     share->data_class = new Spartan_data();
+    share->index_class = new Spartan_index();
     /*END GUOSONG MODIFICATION*/
     pthread_mutex_init(&share->mutex,MY_MUTEX_INIT_FAST);
   }
@@ -237,6 +238,10 @@ static int free_share(SPARTAN_SHARE *share)
     if(share->data_class != NULL)
         delete share->data_class;
     share->data_class = NULL;
+
+    if(share->index_class != NULL)
+        delete share->index_class;
+    share->index_class = NULL;
     /*END GUOSONG MODIFICATION*/
     hash_delete(&spartan_open_tables, (uchar*) share);
     thr_lock_delete(&share->lock);
@@ -318,6 +323,9 @@ int ha_spartan::open(const char *name, int mode, uint test_if_locked)
     DBUG_RETURN(1);
   share->data_class->open_table(fn_format(name_buff, name, "", SDE_EXT,
               MY_REPLACE_EXT|MY_UNPACK_FILENAME));
+  share->index_class->open_index(fn_format(name_buff, name, "", SDI_EXT,
+              MY_REPLACE_EXT|MY_UNPACK_FILENAME));
+  share->index_class->load_index();
   /*END GUOSONG MODIFICATION*/
   thr_lock_data_init(&share->lock,&lock,NULL);
 
@@ -344,6 +352,12 @@ int ha_spartan::open(const char *name, int mode, uint test_if_locked)
 int ha_spartan::close(void)
 {
   DBUG_ENTER("ha_spartan::close");
+  /*BEGIN GUOSONG MODIFICATION*/
+  share->data_class->close_table();
+  share->index_class->save_index();
+  share->index_class->destroy_index();
+  share->index_class->close_index();
+  /*END GUOSONG MODIFICATION*/
   DBUG_RETURN(free_share(share));
 }
 
@@ -380,16 +394,60 @@ int ha_spartan::close(void)
 
 int ha_spartan::write_row(uchar *buf)
 {
-  DBUG_ENTER("ha_spartan::write_row");
   /*BEGIN GUOSONG MODIFICATION*/
+  long long pos;
+  SDE_INDEX ndx;
+
+  DBUG_ENTER("ha_spartan::write_row");
   ha_statistic_increment(&SSV::ha_write_count);
+  ndx.length = get_key_len();
+  memcpy(ndx.key, get_key(), get_key_len());
   pthread_mutex_lock(&spartan_mutex);
-  share->data_class->write_row(buf, table->s->rec_buff_length);
+  pos = share->data_class->write_row(buf, table->s->rec_buff_length);
+  ndx.pos = pos;
+  /*索引记录数据行写入的文件位置*/
+  if(ndx.key)
+      share->index_class->insert_key(&ndx, false);
   pthread_mutex_unlock(&spartan_mutex);
   DBUG_RETURN(0);
   /*END GUOSONG MODIFICATION*/
 }
 
+
+/*BEGIN GUOSONG MODIFICATION*/
+
+uchar *ha_spartan::get_key()
+{
+    uchar *key=0;
+    DBUG_ENTER("ha_spartan::get_key");
+
+    for(Field **field = table->field; *field; field++)
+    {
+        if((*field)->key_start.to_ulonglong() == 1)
+        {
+            key = (uchar*)my_malloc((*field)->field_length, MYF(MY_ZEROFILL | MY_WME));
+            memcpy(key,(*field)->ptr, (*field)->key_length());
+        }
+    }
+
+    DBUG_RETURN(key);
+}
+
+int ha_spartan::get_key_len()
+{
+    int length = 0;
+    DBUG_ENTER("ha_spartan::get_key_len");
+
+    for(Field **field = table->field; *field; field++)
+    {
+        if((*field)->key_start.to_ulonglong() == 1)
+        {
+            length = (*field)->key_length();
+        }
+    }
+    DBUG_RETURN(length);
+}
+/*END GUOSONG MODIFICATION*/
 
 /**
   @brief
@@ -968,7 +1026,11 @@ int ha_spartan::create(const char *name, TABLE *table_arg,
   if(share->data_class->create_table(fn_format(name_buff, name, "",SDE_EXT,
                   MY_REPLACE_EXT|MY_UNPACK_FILENAME)))
         DBUG_RETURN(-1);
+  if(share->index_class->create_index(fn_format(name_buff, name, "",SDI_EXT,
+                  MY_REPLACE_EXT|MY_UNPACK_FILENAME), 128))
+        DBUG_RETURN(-1);
   share->data_class->close_table();
+  share->index_class->close_index();
   /*END GUOSONG MODIFICATION*/
   DBUG_RETURN(0);
 }

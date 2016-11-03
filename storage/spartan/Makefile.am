@@ -14,7 +14,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #called from the top level Makefile
-
 MYSQLDATAdir =          $(localstatedir)
 MYSQLSHAREdir =         $(pkgdatadir)
 MYSQLBASEdir=           $(prefix)
@@ -38,10 +37,7 @@ pkgplugin_LTLIBRARIES =	@plugin_spartan_shared_target@
 ha_spartan_la_LDFLAGS =	-module -rpath $(pkgplugindir)
 ha_spartan_la_CXXFLAGS=	$(AM_CFLAGS) -DMYSQL_DYNAMIC_PLUGIN
 ha_spartan_la_CFLAGS =	$(AM_CFLAGS) -DMYSQL_DYNAMIC_PLUGIN
-
-#BEGIN GUOSONG MODIFICATION
-ha_spartan_la_SOURCES =	ha_spartan.cc spartan_data.cc spartan_index.cc
-#END GUOSONG MODIFICATION
+ha_spartan_la_SOURCES =	ha_spartan.cc
 
 
 EXTRA_LIBRARIES =	libspartan.a

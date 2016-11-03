@@ -84,7 +84,9 @@ public:
     The name of the index type that will be used for display.
     Don't implement this method unless you really have indexes.
    */
-  const char *index_type(uint inx) { return "HASH"; }
+  /*BEGIN GUOSONG MODIFICATION*/
+  const char *index_type(uint inx) { return "Spartan_index class"; }
+  /*END GUOSONG MODIFICATION*/
 
   /** @brief
     The file extensions.
@@ -117,7 +119,10 @@ public:
   */
   ulong index_flags(uint inx, uint part, bool all_parts) const
   {
-    return 0;
+    /*BEGIN GUOSONG MODIFICATION*/
+    return (HA_READ_NEXT | HA_READ_PREV | HA_READ_ORDER | 
+            HA_READ_RANGE |HA_KEYREAD_ONLY);
+    /*END GUOSONG MODIFICATION*/
   }
 
   /** @brief
@@ -138,7 +143,8 @@ public:
     There is no need to implement ..._key_... methods if your engine doesn't
     support indexes.
    */
-  uint max_supported_keys()          const { return 0; }
+  /*BEGIN GUOSONG MODIFICATION*/
+  uint max_supported_keys()          const { return 1; }
 
   /** @brief
     unireg.cc will call this to make sure that the storage engine can handle
@@ -149,7 +155,7 @@ public:
     There is no need to implement ..._key_... methods if your engine doesn't
     support indexes.
    */
-  uint max_supported_key_parts()     const { return 0; }
+  uint max_supported_key_parts()     const { return 1; }
 
   /** @brief
     unireg.cc will call this to make sure that the storage engine can handle
@@ -160,7 +166,8 @@ public:
     There is no need to implement ..._key_... methods if your engine doesn't
     support indexes.
    */
-  uint max_supported_key_length()    const { return 0; }
+  uint max_supported_key_length()    const { return 128; }
+  /*END GUOSONG MODIFICATION*/
 
   /** @brief
     Called in test_quick_select to determine if indexes should be used.
@@ -263,4 +270,7 @@ public:
 
   THR_LOCK_DATA **store_lock(THD *thd, THR_LOCK_DATA **to,
                              enum thr_lock_type lock_type);     ///< required
+
+  uchar *get_key();
+  int get_key_len();
 };

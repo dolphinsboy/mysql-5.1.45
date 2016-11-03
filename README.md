@@ -24,6 +24,16 @@ INSTALL PLUGIN spartan SONAME 'ha_spartan.so';
 
 ```
 
+**提示**
+
+```
+161103 19:52:43 [ERROR] Can't open shared library '/home/guosong/mysql5145/lib/mysql/plugin/ha_spartan.so' (errno: 0 undefined symbol: _ZN13Spartan_index10insert_keyEP9SDE_INDEXb)
+```
+
+>
+在修改Makefile.in以及Makefile.am之后需要运行一下sh BUILD/autorun.sh，生成新的Makefile.in。
+例如在实际操作中先添加spartan_data，后再添加spartan_index，中间需要运行sh BUILD/autorun.sh，否则lib找不到对应的spartan_index相关函数。
+
 #### 2.增加数据操作
 
 编辑ha_spartan.h文件,添加如下内容:

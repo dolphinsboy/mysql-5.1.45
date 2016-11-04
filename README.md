@@ -35,7 +35,7 @@ INSTALL PLUGIN spartan SONAME 'ha_spartan.so';
 例如在实际操作中先添加spartan_data，后再添加spartan_index，中间需要运行sh BUILD/autorun.sh，否则lib找不到对应的spartan_index相关函数。
 
 
-**在MySQL5.6中，修改操作非常简单：
+**在MySQL5.6中，修改操作非常简单：**
 修改CMakeList.txt文件即可。
 
 **静态编译的模式**

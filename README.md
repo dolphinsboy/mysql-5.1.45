@@ -34,6 +34,21 @@ INSTALL PLUGIN spartan SONAME 'ha_spartan.so';
 在修改Makefile.in以及Makefile.am之后需要运行一下sh BUILD/autorun.sh，生成新的Makefile.in。
 例如在实际操作中先添加spartan_data，后再添加spartan_index，中间需要运行sh BUILD/autorun.sh，否则lib找不到对应的spartan_index相关函数。
 
+
+**在MySQL5.6中，修改操作非常简单：
+修改CMakeList.txt文件即可。
+
+**静态编译的模式**
+```
+SET(SPARTAN_PLUGIN_STATIC "ha_spartan")
+SET(SPARTAN_PLUGIN_MANDATORY TRUE)
+SET(SPARTAN_SOURCES
+    ha_spartan.cc ha_spartan.h
+    spartan_data.cc spartan_data.h
+    spartan_index.cc spartan_index.h
+    )
+MYSQL_ADD_PLUGIN(SPARTAN ${SPARTAN_SOURCES} STORAGE_ENGINE MANDATORY)
+```
 #### 2.增加数据操作
 
 编辑ha_spartan.h文件,添加如下内容:

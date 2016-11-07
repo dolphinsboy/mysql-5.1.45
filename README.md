@@ -296,6 +296,38 @@ do_abi_check:
     #done
 ```
 
+
+**使用索引的效果**
+
+```sql
+mysql> show create table t4\G
+*************************** 1. row ***************************
+       Table: t4
+Create Table: CREATE TABLE `t4` (
+  `id` int(11) NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `v` int(11) DEFAULT NULL,
+  KEY `id` (`id`)
+) ENGINE=SPARTAN DEFAULT CHARSET=utf8
+1 row in set (0.00 sec)
+
+mysql> explain select * from t4 where v=4400;
++----+-------------+-------+------+---------------+------+---------+------+------+-------------+
+| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra       |
++----+-------------+-------+------+---------------+------+---------+------+------+-------------+
+|  1 | SIMPLE      | t4    | ALL  | NULL          | NULL | NULL    | NULL |    2 | Using where |
++----+-------------+-------+------+---------------+------+---------+------+------+-------------+
+1 row in set (0.00 sec)
+
+mysql> explain select * from t4 where id=12; 
++----+-------------+-------+------+---------------+------+---------+-------+------+-------+
+| id | select_type | table | type | possible_keys | key  | key_len | ref   | rows | Extra |
++----+-------------+-------+------+---------------+------+---------+-------+------+-------+
+|  1 | SIMPLE      | t4    | ref  | id            | id   | 4       | const |   10 | NULL  |
++----+-------------+-------+------+---------------+------+---------+-------+------+-------+
+1 row in set (0.00 sec)
+```
+
 ### 二. 添加新的SQL命令（以SHOW DISK_USAGE为例）
 
 #### 1、修改lex.h添加相关Token
